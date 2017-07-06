@@ -18,7 +18,7 @@
     </style>
 </head>
 <body>
-<canvas id="canvas" width="100%" height="100%" style="background-color: #000000"></canvas>
+<canvas id="canvas" width="100%" height="100%" style="background-color: #000000">不支持canvas!!!!请使用谷歌浏览器!!!!</canvas>
 <script>
     let can=document.getElementById("canvas");
     let ctx=can.getContext("2d");//2d画布
@@ -31,49 +31,53 @@
                 setTimeout(callback,1000/60);//让动画达到当前主机的帧数，1S跳60帧，省性能
             }
     })();
-    ctx.fillStyle="#ffffff";//能支持的颜色写法
-    let n=1000;
-    let point=[];
+    function win(){
+        ctx.fillStyle="#ffffff";//能支持的颜色写法
+        let n=1000;
+        let point=[];
+        //绘制圆形
+        //                      xy是圆心坐标，R是半径，0-2PI(绘制整圆),逆时针绘制圆
+        //绘制圆形路径    ctx.arc(x,y,r,0,2*Math.PI,false)
+        //ctx.arc(150,150,50,0,2*Math.PI,false);
+        for (let i = 0; i < n; i++) {//创造雪花
+            point.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                r: Math.random() * 5
+            });
+            ctx.beginPath();//重新从画布上创造雪花，删除前面的轨迹
+            ctx.arc(point[i].x, point[i].y, point[i].r, 0, 2 * Math.PI, false);
+            ctx.fill();//填充
+        }
+        function update() {//更新坐标
+            for (let i = 0; i < n; i++) {
+                point[i].y += Math.random() * 5;
+                if (point[i].y > h) {
+                    point[i].y = 0;
+                }
+            }
+        }
+        function draw() {//移动
+            ctx.clearRect(0, 0, w, h);//清楚前面的画布
+            for (let i = 0; i < n; i++) {
+                ctx.beginPath();
+                ctx.arc(point[i].x, point[i].y, point[i].r, 0, 2 * Math.PI, false);
+                ctx.fill();
+            }
+            update();
+            requestAnimaFrame(draw);
+        }
+        //setInterval(draw,1000/60);
+        draw();
+    }
+    win();
     window.onresize=function(){
         h=window.innerHeight;
         w=window.innerWidth;
         can.width=w;
         can.height=h;
+        win();
     };
-    //绘制圆形
-    //                      xy是圆心坐标，R是半径，0-2PI(绘制整圆),逆时针绘制圆
-    //绘制圆形路径    ctx.arc(x,y,r,0,2*Math.PI,false)
-    //ctx.arc(150,150,50,0,2*Math.PI,false);
-    for (let i = 0; i < n; i++) {//创造雪花
-        point.push({
-            x: Math.random() * w,
-            y: Math.random() * h,
-            r: Math.random() * 5
-        });
-        ctx.beginPath();//重新从画布上创造雪花，删除前面的轨迹
-        ctx.arc(point[i].x, point[i].y, point[i].r, 0, 2 * Math.PI, false);
-        ctx.fill();//填充
-    }
-    function update() {//更新坐标
-        for (let i = 0; i < n; i++) {
-            point[i].y += Math.random() * 5;
-            if (point[i].y > h) {
-                point[i].y = 0;
-            }
-        }
-    }
-    function draw() {//移动
-        ctx.clearRect(0, 0, w, h);//清楚前面的画布
-        for (let i = 0; i < n; i++) {
-            ctx.beginPath();
-            ctx.arc(point[i].x, point[i].y, point[i].r, 0, 2 * Math.PI, false);
-            ctx.fill();
-        }
-        update();
-        requestAnimaFrame(draw);
-    }
-    //setInterval(draw,1000/60);
-    draw();
 </script>
 </body>
 </html>
